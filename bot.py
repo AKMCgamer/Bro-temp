@@ -6,7 +6,7 @@ from openai import OpenAI  # ✅ New import
 
 TOKEN = ""
 
-client_ai = OpenAI(api_key="YOUR_OPENAI_API_KEY")  # ✅ Replace with your API Key
+client_ai = openai.api_key = "" 
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
