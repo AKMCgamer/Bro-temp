@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "📦 Setting up RazorBot..."
+echo "📦 Setting up AKMCbot..."
 cd "$(dirname "$0")"
 mkdir -p ~/razorbot_backups
 
@@ -10,12 +10,17 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Prompt for token
+# Prompt for Discord token
 read -p "Enter your Discord Bot Token: " TOKEN
 export TOKEN="$TOKEN"
 
-# Insert token into bot.py
+# Prompt for OpenAI API key
+read -p "Enter your OpenAI API Key: " OPENAI_KEY
+export OPENAI_API_KEY="$OPENAI_KEY"
+
+# Insert tokens into bot.py
 sed -i "s|TOKEN = \"\"|TOKEN = \\\"$TOKEN\\\"|" bot.py
+sed -i "s|openai.api_key = .*|openai.api_key = \\\"$OPENAI_KEY\\\"|" bot.py
 
 # Run bot
 python bot.py
