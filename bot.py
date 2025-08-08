@@ -1,11 +1,12 @@
-import discord, asyncio, sqlite3, os, zipfile, time, threading, schedule, openai
+import discord, asyncio, sqlite3, os, zipfile, time, threading, schedule
 from discord.ext import commands
 from discord import app_commands
 from datetime import datetime, timedelta
+from openai import OpenAI  # ✅ New import
 
 TOKEN = ""
 
-openai.api_key = "YOUR_OPENAI_API_KEY"  # ← Replace this with your OpenAI API Key
+client_ai = OpenAI(api_key="YOUR_OPENAI_API_KEY")  # ✅ Replace with your API Key
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -137,17 +138,17 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-# 💡 AI Image Generator Command
+# 💡 AI Image Generator Command (fixed for OpenAI v1+)
 @tree.command(name="imagine", description="Generate an AI image from a prompt.")
 async def imagine(interaction: discord.Interaction, prompt: str):
     await interaction.response.defer()
     try:
-        response = openai.Image.create(
+        response = client_ai.images.generate(
+            model="gpt-image-1",
             prompt=prompt,
-            n=1,
             size="512x512"
         )
-        image_url = response["data"][0]["url"]
+        image_url = response.data[0].url
         embed = discord.Embed(title="🧠 AI Image Generator", description=f"Prompt: `{prompt}`", color=0x00ffff)
         embed.set_image(url=image_url)
         await interaction.followup.send(embed=embed)
